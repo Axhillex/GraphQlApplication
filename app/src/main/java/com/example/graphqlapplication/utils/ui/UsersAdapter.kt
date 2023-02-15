@@ -43,7 +43,7 @@ class UsersAdapter : RecyclerView.Adapter<UserItemView>() {
         internal fun setUpView(userData: UserData?) {
             "(${userData?.username})".also { binding.userName.text = it }
             binding.name.text = userData?.name
-            "${userData?.email}  -  ${userData?.phone}".also { binding.emailAndPhone.text = it }
+            "${userData?.email}  |  ${userData?.phone}".also { binding.emailAndPhone.text = it }
         }
     }
 }
