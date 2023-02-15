@@ -8,5 +8,5 @@ import retrofit2.http.POST
 interface ApiService {
 
     @POST(EndPoint.API)
-    suspend fun getUsers(@Body body: String): Response<String>
+    suspend fun graphQlUser(@Body body: String): Response<String>
 }

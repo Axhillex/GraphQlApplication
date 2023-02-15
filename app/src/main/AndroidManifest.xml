@@ -18,9 +18,11 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="tiramisu">
         <activity
+            android:name=".AddOrEditUserActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/title_activity_main"
             android:theme="@style/Theme.GraphQlApplication.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

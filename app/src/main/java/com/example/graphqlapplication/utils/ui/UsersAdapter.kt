@@ -15,13 +15,16 @@ import kotlinx.coroutines.withContext
 class UsersAdapter : RecyclerView.Adapter<UserItemView>() {
 
     private val usersList: ArrayList<UserData?> = ArrayList()
+    internal var callBack: UsersInterface? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserItemView {
         return UserItemView(LayoutInflater.from(parent.context).inflate(R.layout.user_item_view, parent, false))
     }
 
     override fun onBindViewHolder(holder: UserItemView, position: Int) {
-        holder.setUpView(usersList[position])
+        holder.setUpView(usersList[position], onRemove = {
+            callBack?.onRemove(it)
+        })
     }
 
     override fun getItemCount(): Int {
@@ -40,10 +43,18 @@ class UsersAdapter : RecyclerView.Adapter<UserItemView>() {
 
         private val binding = UserItemViewBinding.bind(itemView)
 
-        internal fun setUpView(userData: UserData?) {
+        internal fun setUpView(userData: UserData?, onRemove: (id: String?) -> Unit) {
             "(${userData?.username})".also { binding.userName.text = it }
             binding.name.text = userData?.name
             "${userData?.email}  |  ${userData?.phone}".also { binding.emailAndPhone.text = it }
+
+            binding.edit.setOnClickListener {
+
+            }
+
+            binding.remove.setOnClickListener {
+                onRemove.invoke(userData?.id)
+            }
         }
     }
 }
