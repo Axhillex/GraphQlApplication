@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUpView() {
+    private suspend fun setUpView() = withContext(Dispatchers.Main) {
         binding.usersRecyclerView.adapter = adapter
     }
 }
