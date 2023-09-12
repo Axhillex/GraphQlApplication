@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity(), UsersInterface {
                 }
             }
         }
-        countDownTimer(20)
+        countDownTimer(35)
             .onStart {
                 userData.add(0, UserData("0", "0", "0", "0", "0"))
             }
@@ -125,7 +125,7 @@ class MainActivity : AppCompatActivity(), UsersInterface {
                 if (it.mod(3) == 0) {
                     userData.add(0, UserData("0", "0", "0", "0", "0"))
                 }
-                if (it.mod(5) == 0) {
+                if (it.mod(7) == 0) {
                     userData.removeAt(0)
                 }
             }
