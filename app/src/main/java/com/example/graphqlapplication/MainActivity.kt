@@ -3,19 +3,19 @@ package com.example.graphqlapplication
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity(), UsersInterface {
 
     private lateinit var binding: ActivityMainBinding
     private val adapter = UsersAdapter()
+    private val timer = mutableStateOf(0)
     private val userData = mutableStateListOf(
         UserData("1", "First Name", "firstUserName", "firstEmail", "phone"),
         UserData("2", "Second Name", "secondUserName", "secondEmail", "phone"),
@@ -97,19 +98,48 @@ class MainActivity : AppCompatActivity(), UsersInterface {
     @OptIn(ExperimentalFoundationApi::class)
     private suspend fun setUpView() = withContext(Dispatchers.Main) {
         binding.usersRecyclerView.adapter = adapter
+        userData.addAll(userData)
         binding.composeView.setContent {
             LazyColumn(
-                Modifier
-                    .fillMaxSize()
+                Modifier.fillMaxSize(),
+                rememberLazyListState()
             ) {
                 itemsIndexed(userData) { index, user ->
-                    Row(
+                    Column(
                         Modifier
                             .fillMaxWidth()
                             .padding(16.dp)
-                            .animateItemPlacement(tween(250))
                     ) {
-                        Text(text = "$user")
+                        Text(
+                            text = "$user",
+                            Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.CenterHorizontally)
+                        )
+                        Text(
+                            text = "Timer -> ${timer.value}",
+                            Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.CenterHorizontally)
+                        )
+//                        LaunchedEffect(key1 = null, block = {
+//                            launch(Dispatchers.IO) {
+//                                countDownTimer(30)
+//                                    .onStart {
+//                                        user.timer.value = 0
+//                                    }
+//                                    .onEach {
+//                                        user.timer.value = it
+//                                        if (it == 1) {
+//                                            cancel()
+//                                        }
+//                                    }
+//                                    .onCompletion {
+//                                        userData.remove(user)
+//                                    }
+//                                    .launchIn(this)
+//                            }
+//                        })
                     }
                     if (index != userData.size - 1) {
                         Divider(Modifier.padding(horizontal = 8.dp))
@@ -117,19 +147,31 @@ class MainActivity : AppCompatActivity(), UsersInterface {
                 }
             }
         }
-        countDownTimer(35)
+        delay(2000)
+        Toast.makeText(baseContext, "Timer started to add other views", Toast.LENGTH_SHORT).show()
+        countDownTimer(30)
             .onStart {
                 userData.add(0, UserData("0", "0", "0", "0", "0"))
             }
             .onEach {
+                timer.value = it
                 if (it.mod(3) == 0) {
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(baseContext, "added new user", Toast.LENGTH_SHORT).show()
+                    }
                     userData.add(0, UserData("0", "0", "0", "0", "0"))
                 }
-                if (it.mod(7) == 0) {
-                    userData.removeAt(0)
+                if (it == 1) {
+                    delay(1000)
+                    timer.value = 0
+                    delay(1000)
+                    userData.clear()
                 }
             }
             .onCompletion {
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(baseContext, "removed first user", Toast.LENGTH_SHORT).show()
+                }
                 userData.removeAt(0)
             }
             .launchIn(CoroutineScope(Dispatchers.IO))
@@ -156,7 +198,7 @@ class MainActivity : AppCompatActivity(), UsersInterface {
 
             if (request.isSuccessful) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(applicationContext, "Removed $id", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(baseContext, "Removed $id", Toast.LENGTH_SHORT).show()
                 }
                 getUsersList()
             }
