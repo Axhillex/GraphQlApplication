@@ -27,7 +27,17 @@ import com.example.graphqlapplication.utils.constants.client
 import com.example.graphqlapplication.utils.ui.UsersAdapter
 import com.example.graphqlapplication.utils.ui.UsersInterface
 import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -105,6 +115,35 @@ class MainActivity : AppCompatActivity(), UsersInterface {
                         Divider(Modifier.padding(horizontal = 8.dp))
                     }
                 }
+            }
+        }
+        countDownTimer(20)
+            .onStart {
+                userData.add(0, UserData("0", "0", "0", "0", "0"))
+            }
+            .onEach {
+                if (it.mod(3) == 0) {
+                    userData.add(0, UserData("0", "0", "0", "0", "0"))
+                }
+                if (it.mod(5) == 0) {
+                    userData.removeAt(0)
+                }
+            }
+            .onCompletion {
+                userData.removeAt(0)
+            }
+            .launchIn(CoroutineScope(Dispatchers.IO))
+    }
+
+    private suspend fun countDownTimer(duration: Int): Flow<Int> {
+        return callbackFlow {
+            repeat(duration) {
+                send(duration - it)
+                delay(1000)
+            }
+
+            awaitClose {
+                cancel()
             }
         }
     }
