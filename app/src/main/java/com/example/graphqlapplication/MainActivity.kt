@@ -35,6 +35,22 @@ class MainActivity : AppCompatActivity(), UsersInterface {
 
     private lateinit var binding: ActivityMainBinding
     private val adapter = UsersAdapter()
+    private val userData = mutableStateListOf(
+        UserData("1", "First Name", "firstUserName", "firstEmail", "phone"),
+        UserData("2", "Second Name", "secondUserName", "secondEmail", "phone"),
+        UserData("3", "Third Name", "thirdUserName", "thirdEmail", "phone"),
+        UserData("4", "Fourth Name", "fourthUserName", "fourthEmail", "phone"),
+        UserData("5", "Fifth Name", "fifthUserName", "fifthEmail", "phone"),
+        UserData("6", "Sixth Name", "sixthUserName", "sixthEmail", "phone"),
+        UserData("7", "Seventh Name", "seventhUserName", "seventhEmail", "phone"),
+        UserData("8", "Eighth Name", "eighthUserName", "eighthEmail", "phone"),
+        UserData("9", "Ninth Name", "ninthUserName", "ninthEmail", "phone"),
+        UserData("10", "Tenth Name", "tenthUserName", "tenthEmail", "phone"),
+        UserData("11", "Eleventh Name", "tenthUserName", "tenthEmail", "phone"),
+        UserData("12", "Twelfth Name", "tenthUserName", "tenthEmail", "phone"),
+        UserData("13", "Thirteenth Name", "tenthUserName", "tenthEmail", "phone"),
+        UserData("14", "Fourteenth Name", "tenthUserName", "tenthEmail", "phone"),
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +59,17 @@ class MainActivity : AppCompatActivity(), UsersInterface {
             binding = ActivityMainBinding.inflate(layoutInflater)
             getUsersList()
             setUpView()
+            onButtonClicks()
             setContentView(binding.root)
+        }
+    }
+
+    private suspend fun onButtonClicks() = withContext(Dispatchers.IO) {
+        binding.addData.setOnClickListener {
+            userData.add(0, UserData("0", "0", "0", "0", "0"))
+        }
+        binding.removeData.setOnClickListener {
+            userData.removeAt(0)
         }
     }
 
@@ -61,28 +87,12 @@ class MainActivity : AppCompatActivity(), UsersInterface {
     @OptIn(ExperimentalFoundationApi::class)
     private suspend fun setUpView() = withContext(Dispatchers.Main) {
         binding.usersRecyclerView.adapter = adapter
-        val data = mutableStateListOf(
-            UserData("1", "First Name", "firstUserName", "firstEmail", "phone"),
-            UserData("2", "Second Name", "secondUserName", "secondEmail", "phone"),
-            UserData("3", "Third Name", "thirdUserName", "thirdEmail", "phone"),
-            UserData("4", "Fourth Name", "fourthUserName", "fourthEmail", "phone"),
-            UserData("5", "Fifth Name", "fifthUserName", "fifthEmail", "phone"),
-            UserData("6", "Sixth Name", "sixthUserName", "sixthEmail", "phone"),
-            UserData("7", "Seventh Name", "seventhUserName", "seventhEmail", "phone"),
-            UserData("8", "Eighth Name", "eighthUserName", "eighthEmail", "phone"),
-            UserData("9", "Ninth Name", "ninthUserName", "ninthEmail", "phone"),
-            UserData("10", "Tenth Name", "tenthUserName", "tenthEmail", "phone"),
-            UserData("11", "Eleventh Name", "tenthUserName", "tenthEmail", "phone"),
-            UserData("12", "Twelfth Name", "tenthUserName", "tenthEmail", "phone"),
-            UserData("13", "Thirteenth Name", "tenthUserName", "tenthEmail", "phone"),
-            UserData("14", "Fourteenth Name", "tenthUserName", "tenthEmail", "phone"),
-        )
         binding.composeView.setContent {
             LazyColumn(
                 Modifier
                     .fillMaxSize()
             ) {
-                itemsIndexed(data) { index, user ->
+                itemsIndexed(userData) { index, user ->
                     Row(
                         Modifier
                             .fillMaxWidth()
@@ -91,7 +101,7 @@ class MainActivity : AppCompatActivity(), UsersInterface {
                     ) {
                         Text(text = "$user")
                     }
-                    if (index != data.size - 1) {
+                    if (index != userData.size - 1) {
                         Divider(Modifier.padding(horizontal = 8.dp))
                     }
                 }

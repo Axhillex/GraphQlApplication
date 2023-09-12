@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -22,15 +22,38 @@
         app:spanCount="2" />
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/removeData"
         android:layout_width="44dp"
         android:layout_height="44dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
         android:layout_margin="24dp"
-        android:visibility="gone"
+        android:visibility="visible"
         app:cardBackgroundColor="@color/teal_200"
         app:cardCornerRadius="40dp"
-        app:cardElevation="1dp">
+        app:cardElevation="1dp"
+        app:layout_constraintBottom_toTopOf="@id/addData"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            android:rotation="45"
+            android:scaleType="centerInside"
+            android:src="@android:drawable/ic_input_add"
+            app:tint="@color/black" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/addData"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_margin="24dp"
+        android:visibility="visible"
+        app:cardBackgroundColor="@color/teal_200"
+        app:cardCornerRadius="40dp"
+        app:cardElevation="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <ImageView
             android:layout_width="match_parent"
@@ -41,4 +64,4 @@
             app:tint="@color/black" />
     </androidx.cardview.widget.CardView>
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
