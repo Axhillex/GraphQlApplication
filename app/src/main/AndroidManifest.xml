@@ -18,7 +18,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="tiramisu">
         <activity
-            android:name=".AddOrEditUserActivity"
+            android:name=".utils.ui.AddOrEditUserActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
